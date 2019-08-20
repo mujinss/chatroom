@@ -72,12 +72,13 @@
      * 1、WebSocket client receive messages with callback. example：webSocket.onmessage
      * 2、WebSocket client send message to server. example：webSocket.send();
      */
+    var urlParams = new URLSearchParams(window.location.search);
+    var username = urlParams.get('username');
     function getWebSocket() {
         /**
          * WebSocket client PS：URL shows WebSocket protocal, port number, and then end point.
          */
-        var username =/*[[${username}]]*/;
-        var webSocket = new WebSocket(/*[[${webSocketUrl}]]*/ 'ws://localhost:8080/chat?' + username);
+        var webSocket = new WebSocket('ws://localhost:8080/chat?username='+username);
         /**
          * websocket open connection.
          */

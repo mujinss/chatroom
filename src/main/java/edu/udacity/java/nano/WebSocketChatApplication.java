@@ -23,16 +23,17 @@ public class WebSocketChatApplication {
      */
     @GetMapping("/")
     public ModelAndView login() {
+        System.out.println("login");
         return new ModelAndView("/login");
     }
 
     /**
      * Chatroom Page
      */
-    @GetMapping("/chat/{username}")
+    @GetMapping("/chat")
     public ModelAndView chat(String username, HttpServletRequest request) throws UnknownHostException {
         //TODO: add code for login to chatroom.
-
+        System.out.println("username");
         System.out.println(username);
         return new ModelAndView("/chat");
     }

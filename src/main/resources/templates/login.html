@@ -152,28 +152,16 @@
      * Login
      */
     function login() {
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            var data = {};
-            data.username = $("#username").val();
-            $.ajax({
-                type:"GET",
-                url: "/chat",
-                data: data
-            })
-        });
 
-
-
-        // window.location.href = '/chat?username='+ $("#username").val();
+        let username = $("#username").val();
+        let data = {username: username};
+        /*$.post({
+            url: "/chat",
+            data: data
+        })*/
+        window.location.href = '/chat?username='+ $("#username").val();
         // TODO: complete the login function
     }
-    /*function sendLoginMsg() {
-        stompClient.send("/chat/message", {}, JSON.stringify({'username': $("#username").val(), 'message': 'logged in.'}));
-    }*/
 
     /**
      * Enter to login.

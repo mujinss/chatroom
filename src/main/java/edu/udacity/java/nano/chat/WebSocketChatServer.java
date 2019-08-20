@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Component
-@ServerEndpoint("/chat/{username}")
+@ServerEndpoint("/chat")
 public class WebSocketChatServer {
 
     /**
@@ -28,6 +29,7 @@ public class WebSocketChatServer {
     private static Map<String, String> onlineUsers = new ConcurrentHashMap<>();
 
     private static void sendMessageToAll(String msg) {
+        System.out.println(msg);
         onlineSessions.forEach((key, session) -> {
             try {
                 session.getBasicRemote().sendText(msg);
@@ -45,11 +47,15 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session) {
         //String numOfSession = Integer.toString(onlineSessions.size());
+        System.out.println("session.getId");
         System.out.println(session.getId());
         System.out.println(session.getQueryString());
-        //System.out.println(session.getUserPrincipal().toString());
         onlineSessions.put(session.getId(), session);
-        onlineUsers.put(session.getId(), session.getUserPrincipal().toString());
+        onlineUsers.put(session.getId(), session.getQueryString());
+        Message msg = new Message();
+        msg.setUsername(session.getQueryString());
+        msg.setMessage("logged in");
+        sendMessageToAll(session.getQueryString() + " logged in");
 
         //TODO: add on open connection.
     }
