@@ -3,6 +3,8 @@
 <head>
     <title>Chat Room Login</title>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
     <style>
         *, *:after, *:before {
             -webkit-box-sizing: border-box;
@@ -150,8 +152,28 @@
      * Login
      */
     function login() {
-        location.href = '/index?username='+$('#username').val();
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            var data = {};
+            data.username = $("#username").val();
+            $.ajax({
+                type:"GET",
+                url: "/chat",
+                data: data
+            })
+        });
+
+
+
+        // window.location.href = '/chat?username='+ $("#username").val();
+        // TODO: complete the login function
     }
+    /*function sendLoginMsg() {
+        stompClient.send("/chat/message", {}, JSON.stringify({'username': $("#username").val(), 'message': 'logged in.'}));
+    }*/
 
     /**
      * Enter to login.
@@ -160,6 +182,7 @@
         var e = event || window.event || arguments.callee.caller.arguments[0];
         e.keyCode === 13 && login();
     };
+
 
 </script>
 
