@@ -26,7 +26,7 @@
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
                     <div class="mdui-textfield-floating-label" style="margin-top:15px">
                         <i class="mdui-icon">Welcome：</i>
-                        <i class="mdui-icon" id="username" th:text="${username}"></i>
+                        <div class="mdui-icon" id="username" th:text="${username}"></div>
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
@@ -36,6 +36,9 @@
                         <input class="mdui-textfield-input" id="msg"/>
                     </div>
                     <div class="mdui-container" style="padding:20px 35px">
+                        <button class="mdui-btn mdui-color-theme mdui-ripple"
+                                onclick="sendMsgToServer()">Send Message
+                        </button>
                         <!-- TODO: add a send button to send message -->
                         <button class="mdui-btn mdui-color-theme mdui-ripple"
                                 onclick="clearMsg()">Clear
@@ -55,7 +58,11 @@
                     <span class="mdui-chip-icon mdui-color-blue">
                         <i class="mdui-icon material-icons">face</i></span>
                     <span class="mdui-chip-title">Online Users</span>
+                    <div class="chat-num"></div>
                     <!-- TODO: check online number num -->
+                </div>
+                <div class="message-container">
+
                 </div>
                 <!-- TODO: add a message container -->
             </div>
@@ -72,8 +79,9 @@
      * 1、WebSocket client receive messages with callback. example：webSocket.onmessage
      * 2、WebSocket client send message to server. example：webSocket.send();
      */
-    var urlParams = new URLSearchParams(window.location.search);
-    var username = urlParams.get('username');
+    var url = new URL(window.location.href);
+    var username = url.searchParams.get('username');
+    console.log(username)
     function getWebSocket() {
         /**
          * WebSocket client PS：URL shows WebSocket protocal, port number, and then end point.
@@ -98,7 +106,7 @@
                 $messageContainer.append(
                     '<div class="mdui-card" style="margin: 10px 0;">' +
                     '<div class="mdui-card-primary">' +
-                    '<div class="mdui-card-content message-content">' + message.username + "：" + message.msg + '</div>' +
+                    '<div class="mdui-card-content message-content">' + message.username + "：" + message.message + '</div>' +
                     '</div></div>');
             }
             $('.chat-num').text(message.onlineCount);

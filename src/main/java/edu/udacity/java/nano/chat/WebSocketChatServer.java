@@ -53,9 +53,11 @@ public class WebSocketChatServer {
         onlineSessions.put(session.getId(), session);
         onlineUsers.put(session.getId(), session.getQueryString());
         Message msg = new Message();
-        msg.setUsername(session.getQueryString());
+        msg.setUsername(session.getQueryString().split("=")[1]);
         msg.setMessage("logged in");
-        sendMessageToAll(session.getQueryString() + " logged in");
+        msg.setOnlineCount(Integer.toString(onlineUsers.size()));
+        msg.setType("SPEAK");
+        sendMessageToAll(JSON.toJSONString(msg));
 
         //TODO: add on open connection.
     }
@@ -66,7 +68,7 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws IOException {
         Message newMsg = JSON.parseObject(jsonStr, Message.class);
-        sendMessageToAll(newMsg.getMessage());
+        sendMessageToAll(JSON.toJSONString(newMsg));
         //TODO: add send message.
     }
 
