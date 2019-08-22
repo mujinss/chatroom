@@ -33,8 +33,9 @@ public class WebSocketChatApplication {
     @GetMapping("/chat")
     public ModelAndView chat(String username, HttpServletRequest request) throws UnknownHostException {
         //TODO: add code for login to chatroom.
-        System.out.println("username");
         System.out.println(username);
-        return new ModelAndView("/chat");
+        ModelAndView modelAndView = new ModelAndView("/chat");
+        modelAndView.addObject("username", username);
+        return modelAndView;
     }
 }

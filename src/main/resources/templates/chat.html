@@ -26,7 +26,7 @@
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
                     <div class="mdui-textfield-floating-label" style="margin-top:15px">
                         <i class="mdui-icon">Welcome：</i>
-                        <div class="mdui-icon" id="username" th:text="${username}"></div>
+                        <i class="mdui-icon" id="username" th:text="${username}"></i>
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
@@ -83,6 +83,8 @@
     var username = url.searchParams.get('username');
     console.log(username)
     function getWebSocket() {
+    var url = new URL(window.location.href);
+    var username = url.searchParams.get('username');
         /**
          * WebSocket client PS：URL shows WebSocket protocal, port number, and then end point.
          */
@@ -143,7 +145,7 @@
     function sendMsgToServer() {
         var $message = $('#msg');
         if ($message.val()) {
-            webSocket.send(JSON.stringify({username: $('#username').text(), msg: $message.val()}));
+            webSocket.send(JSON.stringify({username: $('#username').text(), message: $message.val()}));
             $message.val(null);
         }
     }

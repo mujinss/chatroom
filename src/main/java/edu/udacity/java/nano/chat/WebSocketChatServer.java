@@ -47,9 +47,6 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session) {
         //String numOfSession = Integer.toString(onlineSessions.size());
-        System.out.println("session.getId");
-        System.out.println(session.getId());
-        System.out.println(session.getQueryString());
         onlineSessions.put(session.getId(), session);
         onlineUsers.put(session.getId(), session.getQueryString());
         Message msg = new Message();
@@ -68,6 +65,9 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws IOException {
         Message newMsg = JSON.parseObject(jsonStr, Message.class);
+        newMsg.setType("SPEAK");
+        newMsg.setOnlineCount(Integer.toString(onlineUsers.size()));
+        //String sessionId = onlineSessions.forEach();
         sendMessageToAll(JSON.toJSONString(newMsg));
         //TODO: add send message.
     }
@@ -82,8 +82,14 @@ public class WebSocketChatServer {
             Map.Entry entry = iterator.next();
             if (session.equals(entry.getValue())) {
                 iterator.remove();
+                String username = onlineUsers.get(session.getId());
                 onlineUsers.remove(session.getId());
-                //sendMessageToAll(session.getUserPrincipal().toString() + " has left the room.");
+                Message newMsg = new Message();
+                newMsg.setType("SPEAK");
+                newMsg.setOnlineCount(Integer.toString(onlineUsers.size()));
+                newMsg.setUsername(username);
+                newMsg.setMessage("has left the room");
+                sendMessageToAll(JSON.toJSONString(newMsg));
             }
         }
 
