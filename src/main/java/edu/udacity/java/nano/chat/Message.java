@@ -6,7 +6,8 @@ package edu.udacity.java.nano.chat;
 public class Message {
     private String username;
     private String message;
-    private String type;
+    private MessageType type;
+    //private String type;
     private String onlineCount;
 
     public String getMessage() {
@@ -17,7 +18,7 @@ public class Message {
         return onlineCount;
     }
 
-    public String getType() {
+    public Enum getMessageType() {
         return type;
     }
 
@@ -27,6 +28,7 @@ public class Message {
 
     public Message() {}
     public Message(String message) { this.message = message; }
+    public enum MessageType { SPEAK, ENTER, LEAVE };
 
     public void setMessage(String message) {
         this.message = message;
@@ -36,7 +38,7 @@ public class Message {
         this.onlineCount = onlineCount;
     }
 
-    public void setType(String type) {
+    public void setMessageType(MessageType type) {
         this.type = type;
     }
 

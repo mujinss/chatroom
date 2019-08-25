@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Iterator;
@@ -29,7 +28,6 @@ public class WebSocketChatServer {
     private static Map<String, String> onlineUsers = new ConcurrentHashMap<>();
 
     private static void sendMessageToAll(String msg) {
-        System.out.println(msg);
         onlineSessions.forEach((key, session) -> {
             try {
                 session.getBasicRemote().sendText(msg);
@@ -38,7 +36,6 @@ public class WebSocketChatServer {
             }
         });
 
-        //TODO: add send message method.
     }
 
     /**
@@ -48,15 +45,13 @@ public class WebSocketChatServer {
     public void onOpen(Session session) {
         //String numOfSession = Integer.toString(onlineSessions.size());
         onlineSessions.put(session.getId(), session);
-        onlineUsers.put(session.getId(), session.getQueryString());
+        onlineUsers.put(session.getId(), session.getQueryString().split("=")[1]);
         Message msg = new Message();
         msg.setUsername(session.getQueryString().split("=")[1]);
         msg.setMessage("logged in");
         msg.setOnlineCount(Integer.toString(onlineUsers.size()));
-        msg.setType("SPEAK");
+        msg.setMessageType(Message.MessageType.ENTER);
         sendMessageToAll(JSON.toJSONString(msg));
-
-        //TODO: add on open connection.
     }
 
     /**
@@ -65,11 +60,9 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws IOException {
         Message newMsg = JSON.parseObject(jsonStr, Message.class);
-        newMsg.setType("SPEAK");
+        newMsg.setMessageType(Message.MessageType.SPEAK);
         newMsg.setOnlineCount(Integer.toString(onlineUsers.size()));
-        //String sessionId = onlineSessions.forEach();
         sendMessageToAll(JSON.toJSONString(newMsg));
-        //TODO: add send message.
     }
 
     /**
@@ -85,16 +78,13 @@ public class WebSocketChatServer {
                 String username = onlineUsers.get(session.getId());
                 onlineUsers.remove(session.getId());
                 Message newMsg = new Message();
-                newMsg.setType("SPEAK");
+                newMsg.setMessageType(Message.MessageType.LEAVE);
                 newMsg.setOnlineCount(Integer.toString(onlineUsers.size()));
                 newMsg.setUsername(username);
                 newMsg.setMessage("has left the room");
                 sendMessageToAll(JSON.toJSONString(newMsg));
             }
         }
-
-
-        //TODO: add close connection.
     }
 
     /**
