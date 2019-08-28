@@ -1,24 +1,24 @@
-package edu.udacity.java.nano.chat;
+package edu.udacity.java.nano;
 
 import org.junit.Test;
 import org.junit.Assert;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.seleniumhq.selenium.*;
-import org.seleniumhq.selenium.By;
-import org.seleniumhq.selenium.WebDriver;
-/*import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;*/
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 
-@SpringBootTest(classes={WebSocketChatApplication.class})
+
 public class WebSocketChatApplicationTest {
 
     public static void main(String[] args) {
-        //WebDriver driver = new ChromeDriver();
-        WebDriver driver = new FirefoxDriver();
+        //WebDriver driver = new FirefoxDriver();
+        //System.setProperty("webdriver.chrome.driver","/Users/shunsun/udacity/java_developer/chatroom/src/test/java/chromedriver");
+        System.setProperty("webdriver.chrome.driver","/Users/shunsun/Downloads/chromedriver");
+        WebDriver driver = new ChromeDriver();
+
+
         // test login;
         driver.get("localhost:8026");
         Assert.assertEquals(driver.getTitle(), "Chat Room Login");
@@ -35,6 +35,7 @@ public class WebSocketChatApplicationTest {
 
         // test send message;
 
+        // finish test
         driver.quit();
     }
 }
