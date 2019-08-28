@@ -14,7 +14,7 @@ public class WebSocketChatApplicationTest {
 
     public static void main(String[] args) {
         //WebDriver driver = new FirefoxDriver();
-        //System.setProperty("webdriver.chrome.driver","/Users/shunsun/udacity/java_developer/chatroom/src/test/java/chromedriver");
+
         System.setProperty("webdriver.chrome.driver","/Users/shunsun/Downloads/chromedriver");
         WebDriver driver = new ChromeDriver();
 
