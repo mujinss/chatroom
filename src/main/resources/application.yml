@@ -7,4 +7,4 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 server:
-  port: ${PORT:8026}
+  port: ${PORT:8080}
