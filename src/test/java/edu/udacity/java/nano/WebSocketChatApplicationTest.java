@@ -3,30 +3,66 @@ package edu.udacity.java.nano;
 import org.junit.Test;
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Actions;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import java.net.MalformedURLException;
+import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class WebSocketChatApplicationTest {
 
-    public static void main(String[] args) {
-        //WebDriver driver = new FirefoxDriver();
+    @Autowired
+    private Environment environment;
+    private static String BASE_URL;
+    private static String CHAT_URL;
 
-        System.setProperty("webdriver.chrome.driver","/Users/shunsun/Downloads/chromedriver");
-        WebDriver driver = new ChromeDriver();
 
+    private WebDriver driver;
+    private WebDriver driver2;
+    @PostConstruct
+    public void initUrls() {
+        BASE_URL = "localhost:8080";
+        CHAT_URL = "localhost:8080/chat";
+    }
+
+    @Before
+    public void init() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+    }
+
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+        if (driver2 != null) {
+            driver2.quit();
+        }
+    }
+
+    @Test
+    public void testLogin() throws MalformedURLException {
 
         // test login;
-        String loginUrl = "localhost:8080";
-        driver.get(loginUrl);
+        //String loginUrl = "localhost:8080";
+        driver.get(BASE_URL);
         Assert.assertEquals(driver.getTitle(), "Chat Room Login");
         WebElement loginField = driver.findElement(By.name("username"));
 
@@ -37,7 +73,7 @@ public class WebSocketChatApplicationTest {
         WebElement username = driver.findElement(By.id("username"));
 
         Assert.assertEquals(username.getText(), "Helen");
-        System.out.println("Welcom: " + username.getText());
+        System.out.println("Welcome: " + username.getText());
 
         // test send message;
         WebElement msgSent = driver.findElement(By.id("msg"));
@@ -49,8 +85,8 @@ public class WebSocketChatApplicationTest {
         Assert.assertEquals(msgReceived.get(0).getText(), "Helen: Hello");
 
         // open a new window
-        WebDriver driver2 = new ChromeDriver();
-        driver2.get(loginUrl);
+        driver2 = new ChromeDriver();
+        driver2.get(BASE_URL);
         WebElement loginField2 = driver2.findElement(By.name("username"));
 
         loginField2.sendKeys("Mary");
@@ -76,9 +112,8 @@ public class WebSocketChatApplicationTest {
         Assert.assertEquals(userCount.getText(), "1");
 
 
-
         // finish test
         System.out.println("tests passed!");
-        driver.quit();
+        //driver.quit();
     }
 }
